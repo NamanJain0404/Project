@@ -57,6 +57,8 @@ def index(request):
         cid=category.objects.all().order_by("-id")
         pid=product.objects.all().order_by("-id")
         uid=user.objects.get(username=request.session['username'])
+        wid_count=wishlist.objects.filter(user=uid).count()
+        cid_count=cart.objects.filter(user=uid).count()
 
         search_query = request.GET.get('query')
         if search_query:
@@ -65,6 +67,8 @@ def index(request):
             "cid":cid,
             "pid":pid,
             "uid":uid,
+            "wid_count": wid_count,
+            "cid_count": cid_count,
             "search_query": search_query,
         }
         return render(request,"index.html",contaxt)
@@ -180,11 +184,21 @@ def shoping_cart(request):
     
     uid=user.objects.get(username=request.session['username'])
     shop_items = cart.objects.filter(user=uid).select_related('product')
+    l1=[i.total_price for i in shop_items]
+    sub_total=sum(l1)
+    if sub_total == 0:
+        shipping=0
+    else:
+        shipping=20
+    total=sub_total+shipping
     cid=category.objects.all().order_by("-id")
 
     contaxt={
             "cid":cid,
             "shop_items": shop_items,
+            "sub_total": sub_total,
+            "shipping": shipping,
+            "total": total,
         }
     return render(request,"shoping_cart.html", contaxt)
 
