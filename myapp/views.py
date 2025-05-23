@@ -178,18 +178,13 @@ def shoping_cart(request):
     if 'username' not in request.session:
         return redirect('login')
     
-    cid=category.objects.all().order_by("-id")
     uid=user.objects.get(username=request.session['username'])
-    pid = product.objects.get(id=id)
+    shop_items = cart.objects.filter(user=uid).select_related('product')
+    cid=category.objects.all().order_by("-id")
 
-    existing = shoping_cart.objects.filter(user=uid, product=pid)
-    if existing.exists():
-        existing.delete()  # Remove from wishlist
-    else:
-        shoping_cart.objects.create(user=uid, product=pid)
     contaxt={
             "cid":cid,
-            "uid":uid,
+            "shop_items": shop_items,
         }
     return render(request,"shoping_cart.html", contaxt)
 
@@ -425,5 +420,39 @@ def wishlists(request):
     wishlist_items = wishlist.objects.filter(user=uid)
     return render(request, "wishlist.html", {"wishlist_items": wishlist_items})
 
-def add_cart(request):
+def add_cart(request,id):
+    if 'username' not in request.session:
+        return redirect('login')  # Not logged in
+
+    uid = user.objects.get(username=request.session['username'])
+    pid = product.objects.get(id=id)
+
+    existing = cart.objects.filter(user=uid, product=pid)
+    if existing.exists():
+        existing.delete()  # Remove from cart
+    else:
+        cart.objects.create(user=uid, product=pid,qty=1,total_price=pid.price)  # Add to cart
+
+    # return redirect('shop_grid')  # Or use request.META.get('HTTP_REFERER') to go back to same page
+    referer = request.META.get('HTTP_REFERER', '')
+    if 'shoping_cart' in referer:
+        return redirect('shoping_cart')  # your cart page URL name
+    else:
+        return redirect('shop_grid')  # fallback if not from cart
     
+def cart_plus(request,id):
+    cid=cart.objects.get(id=id)
+    cid.qty+=1
+    cid.total_price=cid.product.price*cid.qty
+    cid.save()
+    return redirect(shoping_cart)
+
+def cart_minus(request,id):
+    cid=cart.objects.get(id=id)
+    if cid.qty>1:
+        cid.qty-=1
+        cid.total_price=cid.product.price*cid.qty
+        cid.save()
+    else:
+        cid.delete()
+    return redirect(shoping_cart)

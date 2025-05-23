@@ -8,9 +8,12 @@
             width: 15px;
             height: 15px;
             border-radius: 50%;
-            right:10.2%;
-            top:35%;
+            right: 10.2%;
+            top: 35%;
             position: absolute;
+        }
+        .pro-qty span.qtybtn {
+            display: none !important;
         }
     </style>
     <meta charset="UTF-8">
@@ -65,7 +68,7 @@
             </div>
             <div class="header__top__right__auth">
                 <a href="{% url 'profile' %}" title="View Profile">
-                    <img src="{{ uid.image.url }}" alt="User" class="profile-icon" >
+                    <img src="{{ uid.image.url }}" alt="User" class="profile-icon">
                 </a>
                 <a href="{% url 'logout' %}">Logout</a>
             </div>
@@ -134,7 +137,7 @@
                             </div>
                             <div class="header__top__right__auth">
                                 <a href="{% url 'profile' %}" title="View Profile">
-                                    <img src="{{ uid.image.url }}" alt="User" class="profile-icon" >
+                                    <img src="{{ uid.image.url }}" alt="User" class="profile-icon">
                                 </a>
                                 <a href="{% url 'logout' %}">Logout</a>
                             </div>
@@ -265,72 +268,38 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                {% for item in shop_items %}
                                 <tr>
                                     <td class="shoping__cart__item">
-                                        <img src="{% static 'img/cart/cart-1.jpg' %}" alt="">
-                                        <h5>Vegetable’s Package</h5>
+                                        <img src="{{item.product.image}}" alt="">
+                                        <h5>{{ item.product.name }}</h5>
                                     </td>
                                     <td class="shoping__cart__price">
-                                        $55.00
+                                        {{ item.product.price }}
                                     </td>
                                     <td class="shoping__cart__quantity">
                                         <div class="quantity">
                                             <div class="pro-qty">
-                                                <input type="text" value="1">
+                                                <a href="{% url 'cart_minus' item.id %}" class="qty-btn">−</a>
+                                                <input type="text" value="{{ item.qty }}" class="qty-input" readonly>
+                                                <a href="{% url 'cart_plus' item.id %}" class="qty-btn">+</a>
                                             </div>
                                         </div>
                                     </td>
                                     <td class="shoping__cart__total">
-                                        $110.00
+                                        {{item.total_price}}
                                     </td>
                                     <td class="shoping__cart__item__close">
+                                        <a href="{% url 'add_cart' item.product.id %}">
                                         <span class="icon_close"></span>
+                                        </a>
                                     </td>
                                 </tr>
+                                {% empty %}
                                 <tr>
-                                    <td class="shoping__cart__item">
-                                        <img src="{% static 'img/cart/cart-2.jpg' %}" alt="">
-                                        <h5>Fresh Garden Vegetable</h5>
-                                    </td>
-                                    <td class="shoping__cart__price">
-                                        $39.00
-                                    </td>
-                                    <td class="shoping__cart__quantity">
-                                        <div class="quantity">
-                                            <div class="pro-qty">
-                                                <input type="text" value="1">
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="shoping__cart__total">
-                                        $39.99
-                                    </td>
-                                    <td class="shoping__cart__item__close">
-                                        <span class="icon_close"></span>
-                                    </td>
+                                    <td colspan="3" style="text-align: center;">Your cart is empty.</td>
                                 </tr>
-                                <tr>
-                                    <td class="shoping__cart__item">
-                                        <img src="{% static 'img/cart/cart-3.jpg' %}" alt="">
-                                        <h5>Organic Bananas</h5>
-                                    </td>
-                                    <td class="shoping__cart__price">
-                                        $69.00
-                                    </td>
-                                    <td class="shoping__cart__quantity">
-                                        <div class="quantity">
-                                            <div class="pro-qty">
-                                                <input type="text" value="1">
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="shoping__cart__total">
-                                        $69.99
-                                    </td>
-                                    <td class="shoping__cart__item__close">
-                                        <span class="icon_close"></span>
-                                    </td>
-                                </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>
@@ -427,10 +396,17 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="footer__copyright">
-                        <div class="footer__copyright__text"><p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-  <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p></div>
-                        <div class="footer__copyright__payment"><img src="{% static 'img/payment-item.png' %}" alt=""></div>
+                        <div class="footer__copyright__text">
+                            <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                                Copyright &copy;
+                                <script>document.write(new Date().getFullYear());</script> All rights reserved | This
+                                template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a
+                                    href="https://colorlib.com" target="_blank">Colorlib</a>
+                                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                            </p>
+                        </div>
+                        <div class="footer__copyright__payment"><img src="{% static 'img/payment-item.png' %}" alt="">
+                        </div>
                     </div>
                 </div>
             </div>
