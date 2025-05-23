@@ -14,9 +14,13 @@ def msg(request):
 def blog_details(request):
     cid=category.objects.all().order_by("-id")
     uid=user.objects.get(username=request.session['username'])
+    wid_count=wishlist.objects.filter(user=uid).count()
+    cid_count=cart.objects.filter(user=uid).count()
     contaxt={
             "cid":cid,
             "uid":uid,
+            "wid_count": wid_count,
+            "cid_count": cid_count,
         }
     return render(request,"blog_details.html", contaxt)
 
@@ -24,6 +28,8 @@ def blog(request):
     cid=category.objects.all().order_by("-id")
     pid=product.objects.all().order_by("-id")
     uid=user.objects.get(username=request.session['username'])
+    wid_count=wishlist.objects.filter(user=uid).count()
+    cid_count=cart.objects.filter(user=uid).count()
     pagination=Paginator(pid,1)
     page=request.GET.get("page")
     pid=pagination.get_page(page)
@@ -31,24 +37,34 @@ def blog(request):
             "cid":cid,
             "pid":pid,
             "uid":uid,
+            "wid_count": wid_count,
+            "cid_count": cid_count,
         }
     return render(request,"blog.html", contaxt)
 
 def checkout(request):
         cid=category.objects.all().order_by("-id")
         uid=user.objects.get(username=request.session['username'])
+        wid_count=wishlist.objects.filter(user=uid).count()
+        cid_count=cart.objects.filter(user=uid).count()
         contaxt={
                 "cid":cid,
                 "uid":uid,
+                "wid_count": wid_count,
+                "cid_count": cid_count,
             }
         return render(request,"checkout.html", contaxt)
 
 def contact(request):
     cid=category.objects.all().order_by("-id")
     uid=user.objects.get(username=request.session['username'])
+    wid_count=wishlist.objects.filter(user=uid).count()
+    cid_count=cart.objects.filter(user=uid).count()
     contaxt={
             "cid":cid,
             "uid":uid,
+            "wid_count": wid_count,
+            "cid_count": cid_count,
         }
     return render(request,"contact.html", contaxt)
 
@@ -82,15 +98,19 @@ def shop_details(request):
     cid=category.objects.all().order_by("-id")
     pid=product.objects.all().order_by("-id")
     uid=user.objects.get(username=request.session['username'])
+    wid_count=wishlist.objects.filter(user=uid).count()
+    cid_count=cart.objects.filter(user=uid).count()
     contaxt={
             "cid":cid,
             "pid":pid,
             "uid":uid,
+            "wid_count": wid_count,
+            "cid_count": cid_count,
         }
     return render(request,"shop_details.html", contaxt)
 
-from django.core.paginator import Paginator
-from .models import category, product  # Adjust imports as needed
+# from django.core.paginator import Paginator
+# from .models import category, product  # Adjust imports as needed
 
 # def shop_grid(request):
 #     cid = category.objects.all().order_by("-id")
@@ -135,6 +155,8 @@ from .models import category, product  # Adjust imports as needed
 def shop_grid(request):
     cid = category.objects.all().order_by("-id")
     uid=user.objects.get(username=request.session['username'])
+    wid_count=wishlist.objects.filter(user=uid).count()
+    cid_count=cart.objects.filter(user=uid).count()
     wishlist_items = []
     
     # Get wishlist items if user is logged in
@@ -175,6 +197,8 @@ def shop_grid(request):
         "wishlist_items": wishlist_items,
         "min_price": min_price if min_price else 10,
         "max_price": max_price if max_price else 540,
+        "wid_count":wid_count,
+        "cid_count":cid_count,
     }
     return render(request, "shop_grid.html", context)
 
@@ -183,6 +207,8 @@ def shoping_cart(request):
         return redirect('login')
     
     uid=user.objects.get(username=request.session['username'])
+    wid_count=wishlist.objects.filter(user=uid).count()
+    cid_count=cart.objects.filter(user=uid).count()
     shop_items = cart.objects.filter(user=uid).select_related('product')
     l1=[i.total_price for i in shop_items]
     sub_total=sum(l1)
@@ -199,6 +225,8 @@ def shoping_cart(request):
             "sub_total": sub_total,
             "shipping": shipping,
             "total": total,
+            "wid_count": wid_count,
+            "cid_count": cid_count,
         }
     return render(request,"shoping_cart.html", contaxt)
 
