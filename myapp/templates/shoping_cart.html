@@ -52,7 +52,7 @@
         <div class="humberger__menu__cart">
             <ul>
                 <li><a href="{% url 'wishlists' %}"><i class="fa fa-heart"></i> <span>{{wid_count}}</span></a></li>
-                <li><a href="#"><i class="fa fa-shopping-bag"></i> <span>{{cid_count}}</span></a></li>
+                <li><a href="{% url 'shoping_cart' %}"><i class="fa fa-shopping-bag"></i> <span>{{cid_count}}</span></a></li>
             </ul>
             <div class="header__cart__price">item: <span>$150.00</span></div>
         </div>
@@ -175,7 +175,7 @@
                     <div class="header__cart">
                         <ul>
                             <li><a href="{% url 'wishlists' %}"><i class="fa fa-heart"></i> <span>{{wid_count}}</span></a></li>
-                            <li><a href="#"><i class="fa fa-shopping-bag"></i> <span>{{cid_count}}</span></a></li>
+                            <li><a href="{% url 'shoping_cart' %}"><i class="fa fa-shopping-bag"></i> <span>{{cid_count}}</span></a></li>
                         </ul>
                         <div class="header__cart__price">item: <span>$150.00</span></div>
                     </div>
@@ -332,7 +332,7 @@
                             <li>Shipping <span>${{shipping}}</span></li>
                             <li>Total <span>${{total}}</span></li>
                         </ul>
-                        <a href="#" class="primary-btn">PROCEED TO CHECKOUT</a>
+                        <a href="{% url 'checkout' %}" class="primary-btn">PROCEED TO CHECKOUT</a>
                     </div>
                 </div>
             </div>
