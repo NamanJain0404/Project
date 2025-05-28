@@ -518,7 +518,7 @@ def cart_minus(request,id):
     else:
         cid.delete()
     return redirect(shoping_cart)
-
+import uuid
 def Add_Billing(request):
     if 'username' not in request.session:
         return redirect('login')
@@ -526,6 +526,8 @@ def Add_Billing(request):
     uid = user.objects.get(username=request.session['username'])
     wid_count = wishlist.objects.filter(user=uid).count()
     cid_count = cart.objects.filter(user=uid).count()
+    cid = cart.objects.filter(user=uid)
+    subtotal=sum([i.total_price for i in cid])
     
     if request.POST:
         first_name = request.POST['first_name']
@@ -551,6 +553,10 @@ def Add_Billing(request):
             email=email
         )
         messages.success(request, "Billing details saved successfully.")
+        latest_address=Billing_details.objects.filter(user=uid).order_by("-id")[0]
+        order_id = str(uuid.uuid4()).replace('-', '')[:12]
+        oid=order.objects.create(user=uid,address=latest_address,subtotal=subtotal,total=subtotal,order_id=order_id)
+        oid.product.set(cid)
         return redirect('checkout')
 
     context = {
@@ -559,3 +565,15 @@ def Add_Billing(request):
         "cid_count": cid_count
     }
     return render(request, 'checkout.html', context)
+
+def order_detail(request):
+    if 'username' not in request.session:
+        return redirect('login')
+
+    uid = user.objects.get(username=request.session['username'])
+    orders = order.objects.filter(user=uid).order_by('-datetime')
+
+    contaxt = {
+        "orders": orders,
+    }
+    return render(request, 'order_list.html', contaxt)

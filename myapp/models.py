@@ -59,3 +59,17 @@ class Billing_details(models.Model):
 
     def _str_(self):
         return f"{self.user.name} - {self.first_name} {self.last_name}"
+
+
+class order(models.Model):
+    user = models.ForeignKey(user, on_delete=models.CASCADE)
+    address = models.ForeignKey(Billing_details, on_delete=models.CASCADE)
+    product = models.ManyToManyField(cart)
+    subtotal=models.IntegerField()
+    total=models.IntegerField()
+    order_id=models.CharField(max_length=100)
+    datetime=models.DateTimeField(auto_now_add=True)
+
+    
+
+
