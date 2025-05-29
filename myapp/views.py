@@ -577,3 +577,16 @@ def order_detail(request):
         "orders": orders,
     }
     return render(request, 'order_list.html', contaxt)
+
+def single_orders (request,id):
+    oid=order.objects.get(id=id)
+    uid=user.objects.get(username=request.session['username'])
+    wid_count=wishlist.objects.filter(user=uid).count()
+    cid_count=cart.objects.filter(user=uid).count()
+    con={
+        "oid":oid,
+        "uid":uid,
+        "wid_count":wid_count,
+        "cid_count":cid_count,
+    }
+    return render (request, "single_order.html",con)

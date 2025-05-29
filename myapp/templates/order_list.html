@@ -74,7 +74,7 @@
             {% for order in orders %}
             <!-- Example rows: replace with dynamic data -->
             <tr>
-                <td>{{order.order_id}}</td>
+                <td><a href="{% url 'single_orders' order.id %}">{{order.order_id}}</a></td>
                 <td>{{order.datetime|date:"Y-m-d H:i"}}</td>
                 <td>{{order.total}}</td>
             </tr>
