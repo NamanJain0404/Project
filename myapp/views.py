@@ -16,11 +16,20 @@ def blog_details(request):
     uid=user.objects.get(username=request.session['username'])
     wid_count=wishlist.objects.filter(user=uid).count()
     cid_count=cart.objects.filter(user=uid).count()
+    shop_items = cart.objects.filter(user=uid).select_related('product')
+    l1 = [i.total_price for i in shop_items]
+    sub_total = sum(l1)
+    shipping = 0 if sub_total == 0 or sub_total > 99 else 20
+    total = sub_total + shipping
     contaxt={
             "cid":cid,
             "uid":uid,
             "wid_count": wid_count,
             "cid_count": cid_count,
+            "shop_items":shop_items,
+            "sub_total":sub_total,
+            "shipping":shipping,
+            "total":total,
         }
     return render(request,"blog_details.html", contaxt)
 
@@ -33,12 +42,21 @@ def blog(request):
     pagination=Paginator(pid,1)
     page=request.GET.get("page")
     pid=pagination.get_page(page)
+    shop_items = cart.objects.filter(user=uid).select_related('product')
+    l1 = [i.total_price for i in shop_items]
+    sub_total = sum(l1)
+    shipping = 0 if sub_total == 0 or sub_total > 99 else 20
+    total = sub_total + shipping
     contaxt={
             "cid":cid,
             "pid":pid,
             "uid":uid,
             "wid_count": wid_count,
             "cid_count": cid_count,
+            "shop_items":shop_items,
+            "sub_total":sub_total,
+            "shipping":shipping,
+            "total":total,
         }
     return render(request,"blog.html", contaxt)
 
@@ -52,6 +70,12 @@ def checkout(request):
         subtotal=sum(item.total_price for item in cart_items)
         shipping=0 if subtotal>99 else 20
         total=subtotal+shipping
+        
+        shop_items = cart.objects.filter(user=uid).select_related('product')
+        l1 = [i.total_price for i in shop_items]
+        sub_total = sum(l1)
+        shipping = 0 if sub_total == 0 or sub_total > 99 else 20
+        total = sub_total + shipping
 
         contaxt={
                 "cid":cid,
@@ -62,6 +86,8 @@ def checkout(request):
                 "subtotal":subtotal,
                 "shipping":shipping,
                 "total":total,
+                "shop_items":shop_items,
+                "sub_total":sub_total,
             }
         return render(request,"checkout.html", contaxt)
 
@@ -70,11 +96,20 @@ def contact(request):
     uid=user.objects.get(username=request.session['username'])
     wid_count=wishlist.objects.filter(user=uid).count()
     cid_count=cart.objects.filter(user=uid).count()
+    shop_items = cart.objects.filter(user=uid).select_related('product')
+    l1 = [i.total_price for i in shop_items]
+    sub_total = sum(l1)
+    shipping = 0 if sub_total == 0 or sub_total > 99 else 20
+    total = sub_total + shipping
     contaxt={
             "cid":cid,
             "uid":uid,
             "wid_count": wid_count,
             "cid_count": cid_count,
+            "shop_items":shop_items,
+            "sub_total":sub_total,
+            "shipping":shipping,
+            "total":total,
         }
     return render(request,"contact.html", contaxt)
 
@@ -85,6 +120,11 @@ def index(request):
         uid=user.objects.get(username=request.session['username'])
         wid_count=wishlist.objects.filter(user=uid).count()
         cid_count=cart.objects.filter(user=uid).count()
+        shop_items = cart.objects.filter(user=uid).select_related('product')
+        l1 = [i.total_price for i in shop_items]
+        sub_total = sum(l1)
+        shipping = 0 if sub_total == 0 or sub_total > 99 else 20
+        total = sub_total + shipping
 
         search_query = request.GET.get('query')
         if search_query:
@@ -96,6 +136,10 @@ def index(request):
             "wid_count": wid_count,
             "cid_count": cid_count,
             "search_query": search_query,
+            "shop_items":shop_items,
+            "sub_total":sub_total,
+            "shipping":shipping,
+            "total":total,
         }
         return render(request,"index.html",contaxt)
     else:
@@ -110,12 +154,23 @@ def shop_details(request):
     uid=user.objects.get(username=request.session['username'])
     wid_count=wishlist.objects.filter(user=uid).count()
     cid_count=cart.objects.filter(user=uid).count()
+
+    shop_items = cart.objects.filter(user=uid).select_related('product')
+    l1 = [i.total_price for i in shop_items]
+    sub_total = sum(l1)
+    shipping = 0 if sub_total == 0 or sub_total > 99 else 20
+    total = sub_total + shipping
+
     contaxt={
             "cid":cid,
             "pid":pid,
             "uid":uid,
             "wid_count": wid_count,
             "cid_count": cid_count,
+            "shop_items":shop_items,
+            "sub_total":sub_total,
+            "shipping":shipping,
+            "total":total,
         }
     return render(request,"shop_details.html", contaxt)
 
@@ -167,6 +222,11 @@ def shop_grid(request):
     uid=user.objects.get(username=request.session['username'])
     wid_count=wishlist.objects.filter(user=uid).count()
     cid_count=cart.objects.filter(user=uid).count()
+    shop_items = cart.objects.filter(user=uid).select_related('product')
+    l1 = [i.total_price for i in shop_items]
+    sub_total = sum(l1)
+    shipping = 0 if sub_total == 0 or sub_total > 99 else 20
+    total = sub_total + shipping
     wishlist_items = []
     
     # Get wishlist items if user is logged in
@@ -209,6 +269,10 @@ def shop_grid(request):
         "max_price": max_price if max_price else 540,
         "wid_count":wid_count,
         "cid_count":cid_count,
+        "shop_items":shop_items,
+        "sub_total":sub_total,
+        "shipping":shipping,
+        "total":total,
     }
     return render(request, "shop_grid.html", context)
 
@@ -239,6 +303,7 @@ def shoping_cart(request):
             "total": total,
             "wid_count": wid_count,
             "cid_count": cid_count,
+            "uid":uid,
         }
     return render(request,"shoping_cart.html", contaxt)
 
@@ -518,6 +583,7 @@ def cart_minus(request,id):
     else:
         cid.delete()
     return redirect(shoping_cart)
+
 import uuid
 def Add_Billing(request):
     if 'username' not in request.session:
@@ -583,10 +649,21 @@ def single_orders (request,id):
     uid=user.objects.get(username=request.session['username'])
     wid_count=wishlist.objects.filter(user=uid).count()
     cid_count=cart.objects.filter(user=uid).count()
+
+    shop_items = cart.objects.filter(user=uid).select_related('product')
+    l1 = [i.total_price for i in shop_items]
+    sub_total = sum(l1)
+    shipping = 0 if sub_total == 0 or sub_total > 99 else 20
+    total = sub_total + shipping
+
     con={
         "oid":oid,
         "uid":uid,
         "wid_count":wid_count,
         "cid_count":cid_count,
+        "shop_items":shop_items,
+        "sub_total":sub_total,
+        "shipping":shipping,
+        "total":total,
     }
     return render (request, "single_order.html",con)
