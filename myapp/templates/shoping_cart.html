@@ -295,11 +295,12 @@
                                         </a>
                                     </td>
                                 </tr>
-                                {% empty %}
+                                {% endfor %}
+                                {% if cid_count == 0 %}
                                 <tr>
                                     <td colspan="3" style="text-align: center;">Your cart is empty.</td>
                                 </tr>
-                                {% endfor %}
+                                {% endif %}
                             </tbody>
                         </table>
                     </div>

@@ -40,8 +40,9 @@ class cart(models.Model):
     product=models.ForeignKey(product,on_delete=models.CASCADE)
     qty=models.IntegerField(default=1)
     total_price=models.IntegerField(default=1)
-
     added_at=models.DateTimeField(auto_now_add=True)
+    order_status=models.BooleanField(default=False)
+
     def __str__(self):
         return f"{self.user.username} - {self.product.name} (x{self.qty})"
 
@@ -71,5 +72,12 @@ class order(models.Model):
     datetime=models.DateTimeField(auto_now_add=True)
 
     
+class ContactMessage(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    message = models.TextField()
+    submitted_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f"Message from {self.name}"
 

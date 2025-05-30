@@ -288,10 +288,6 @@
                                     <td class="shoping__cart__total">
                                         {{item.total_price}}
                                     </td>
-                                    <td class="shoping__cart__item__close">
-                                        <a href="{% url 'add_cart' item.product.id %}">
-                                        </a>
-                                    </td>
                                 </tr>
                                 {% endfor %}
                                 {% if oid.count == 0 %}
