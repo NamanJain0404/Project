@@ -261,6 +261,12 @@
                 <h4>Billing Details</h4>
                 <form action="{% url 'Add_Billing' %}" method="post">
                     {% csrf_token %}
+                    <script src="https://checkout.razorpay.com/v1/checkout.js" data-key="rzp_test_bilBagOBVTi4lE"
+            data-amount={{response.amount}} data-currency={{response.currency}} data-buttontext="Pay with Razorpay"
+            data-name="{{request.user}}" data-theme.color="#F37254" data-description="" data-image=""
+            data-prefill.name={{request.user.username}} data-prefill.email={{request.user.email}}>
+            </script>
+            <input type="hidden" custom="Hidden Element" name="hidden">
                     <div class="row">
                         <div class="col-lg-8 col-md-6">
                             <div class="row">
